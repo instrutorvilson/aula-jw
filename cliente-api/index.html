@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+</head>
+<body>    
+    <div class="container">
+        <h1 class="text-center m-4">Locais</h1>
+        <a class="btn btn-primary" href="novo.html">Novo</a>
+        <table class="table table-striped mt-4">
+            <thead>
+                <tr>
+                    <th>Descrição</th>
+                    <th>Rua</th>
+                    <th>Numero</th>
+                    <th>Bairro</th>
+                    <th>Cidade</th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody id="dados">
+
+            </tbody>
+        </table>
+    </div>
+    <script>
+        fetch('http://localhost:8080/api/v1/locais')
+        .then(response => response.json())
+        .then(data => {
+            for (let i = 0; i < data.length; i++) {
+                var linha = `<tr>
+                    <td>${data[i].descricao}</td>
+                    <td>${data[i].rua}</td>
+                    <td>${data[i].numero}</td>
+                    <td>${data[i].bairro}</td>
+                    <td>${data[i].cidade}</td>
+                    <td><a href='editar.html?id=${data[i].id}'>Editar</a></td>
+                    <td><a onclick='excluir(${data[i].id})'href='#'>Excluir</a></td>
+                    <td><a href='excluir.html?id=${data[i].id}'>Confirma exclusão</a></td>
+                    </tr>`;
+               
+                document.getElementById('dados').innerHTML += linha
+            }
+        })
+
+        function excluir(local){
+            fetch(`http://localhost:8080/api/v1/locais/${local}`,{
+                method: 'DELETE'
+            })
+            .then(response => window.location.href = 'index.html')        
+        }
+    </script>
+</body>
+</html>
